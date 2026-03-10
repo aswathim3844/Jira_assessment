@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #333;
+        }
+
+        .signup-container h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #4db8ff; /* Light blue heading */
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a2a2a;
+            border: 1px solid #404040;
+            color: #ffffff;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #777;
+        }
+
+        .form-group input:focus {
+            border-color: #4db8ff;
+            box-shadow: 0 0 0 3px rgba(77, 184, 255, 0.15);
+            background-color: #333333;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 6px;
+            min-height: 18px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #4db8ff;
+            color: #121212;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background-color: #3aa6ed;
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .submit-btn:disabled {
+            background-color: #2a5a7d;
+            color: #777;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signup-container">
+        <h2>Times World</h2>
+        <form id="signupForm" onsubmit="event.preventDefault(); alert('Sign up successful!');">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Enter your full name">
+                <div id="nameError" class="error-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email">
+                <div id="emailError" class="error-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password">
+                <div id="passwordFormatError" class="error-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password">
+                <div id="passwordError" class="error-message"></div>
+            </div>
+            
+            <button type="submit" id="submitBtn" class="submit-btn" disabled>Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const passwordFormatError = document.getElementById('passwordFormatError');
+        const passwordError = document.getElementById('passwordError');
+
+        function validateForm() {
+            let isValid = true;
+            
+            // 1. Validate Name
+            if (!nameInput.value.trim()) {
+                nameError.textContent = "Name is required";
+                isValid = false;
+            } else {
+                nameError.textContent = "";
+            }
+
+            // 2. Validate Email
+            const emailValue = emailInput.value.trim();
+            if (!emailValue) {
+                emailError.textContent = "Email is required";
+                isValid = false;
+            } else if (!emailInput.checkValidity()) {
+                emailError.textContent = "Please enter a valid email address";
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+            }
+
+            // 3. Validate Password
+            if (!passwordInput.value) {
+                passwordFormatError.textContent = "Password is required";
+                isValid = false;
+            } else {
+                passwordFormatError.textContent = "";
+            }
+
+            // 4. Validate Confirm Password & Match
+            if (!confirmPasswordInput.value) {
+                passwordError.textContent = "Please confirm your password";
+                isValid = false;
+            } else if (passwordInput.value !== confirmPasswordInput.value) {
+                passwordError.textContent = "Passwords do not match";
+                isValid = false;
+            } else {
+                passwordError.textContent = "";
+            }
+
+            // Disable submit button if validation fails
+            submitBtn.disabled = !isValid;
+        }
+
+        // Add event listeners for real-time validation
+        nameInput.addEventListener('input', validateForm);
+        emailInput.addEventListener('input', validateForm);
+        passwordInput.addEventListener('input', validateForm);
+        confirmPasswordInput.addEventListener('input', validateForm);
+        
+        // Initial validation silently to keep button disabled but not show errors yet
+        submitBtn.disabled = true;
+    </script>
+</body>
+</html>
